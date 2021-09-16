@@ -36,10 +36,10 @@ class CommentDetail(APIView):
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
-    def get(self,request,videoId):
-        comment = Comment.objects.filter(video = videoId)
-        serializer = CommentSerializer(comment)
-        return Response(serializer.data)
+    # def get(self,request,video_Id):
+    #     comment = Comment.objects.filter(video=video_Id)
+    #     serializer = CommentSerializer(comment)
+    #     return Response(serializer.data)
 
     def put(self,request,pk):
         comment = self.get_object(pk)
@@ -53,3 +53,16 @@ class CommentDetail(APIView):
         comment = self.get_object(pk)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentVideo(APIView):
+    def get_object(self,pk):
+        try:
+            return Comment.objects.get(pk=pk)
+        except Comment.DoesNotExist:
+            raise Http404
+    
+    def get(self,request,video_Id):
+        comment = Comment.objects.filter(video=video_Id)
+        serializer = CommentSerializer(comment, many=True)
+        return Response(serializer.data)
