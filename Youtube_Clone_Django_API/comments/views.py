@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from rest_framework import serializers
+from rest_framework.serializers import Serializer
 from .models import Comment
 from .serializers import CommentSerializer
 from rest_framework.views import APIView
@@ -31,6 +33,11 @@ class CommentDetail(APIView):
     
     def get(self,request,pk):
         comment = self.get_object(pk)
+        serializer = CommentSerializer(comment)
+        return Response(serializer.data)
+
+    def get(self,request,videoId):
+        comment = Comment.objects.filter(video = videoId)
         serializer = CommentSerializer(comment)
         return Response(serializer.data)
 
